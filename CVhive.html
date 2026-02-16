@@ -2307,32 +2307,48 @@
             if (signupFormElement) {
                 signupFormElement.addEventListener('submit', async function(e) {
                     e.preventDefault();
+                    const fullName = document.getElementById('signupName').value.trim();
+                    const names = fullName.split(' ');
+                    const firstName = names[0] || '';
+                    const lastName = names.slice(1).join(' ') || '';
+                    
                     const data = {
                         email: document.getElementById('signupEmail').value,
                         password: document.getElementById('signupPassword').value,
-                        name: document.getElementById('signupName').value,
-                        role: currentUserRole
+                        firstName: firstName,
+                        lastName: lastName,
+                        role: currentUserRole,
+                        gdprConsent: document.getElementById('agreeTerms').checked
                     };
+                    
+                    if (currentUserRole === 'employer') {
+                        data.companyName = firstName;
+                    }
 
                     try {
-                        const response = await fetch('/v1/auth/signup', {
+                        console.log('Signup attempt:', data);
+                        const response = await fetch('/v1/users/signup', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(data)
                         });
                         const result = await response.json();
-                        if (response.ok) {
+                        console.log('Signup response:', result);
+                        
+                        if (response.ok && result.success) {
                             localStorage.setItem('authToken', result.data.token);
-                            localStorage.setItem('user', JSON.stringify(result.data.user));
+                            localStorage.setItem('userId', result.data.user_id);
+                            localStorage.setItem('userRole', currentUserRole);
                             if (currentUserRole === 'job_seeker') {
                                 window.location.href = '/job-seeker-dashboard.html';
                             } else {
                                 window.location.href = '/employer-dashboard.html';
                             }
                         } else {
-                            alert('Signup failed: ' + result.error);
+                            alert('Signup failed: ' + (result.error || 'Unknown error'));
                         }
                     } catch (err) {
+                        console.error('Signup error:', err);
                         alert('Error: ' + err.message);
                     }
                 });
@@ -2349,24 +2365,29 @@
                     };
 
                     try {
-                        const response = await fetch('/v1/auth/login', {
+                        console.log('Login attempt:', data);
+                        const response = await fetch('/v1/users/login', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(data)
                         });
                         const result = await response.json();
-                        if (response.ok) {
+                        console.log('Login response:', result);
+                        
+                        if (response.ok && result.success) {
                             localStorage.setItem('authToken', result.data.token);
-                            localStorage.setItem('user', JSON.stringify(result.data.user));
-                            if (result.data.user.role === 'job_seeker') {
+                            localStorage.setItem('userId', result.data.user_id);
+                            localStorage.setItem('userRole', result.data.role);
+                            if (result.data.role === 'job_seeker') {
                                 window.location.href = '/job-seeker-dashboard.html';
                             } else {
                                 window.location.href = '/employer-dashboard.html';
                             }
                         } else {
-                            alert('Login failed: ' + result.error);
+                            alert('Login failed: ' + (result.error || 'Unknown error'));
                         }
                     } catch (err) {
+                        console.error('Login error:', err);
                         alert('Error: ' + err.message);
                     }
                 });
