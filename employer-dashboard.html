@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - CVhive</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1628;
+            --primary-light: #1a56db;
+            --accent: #00c49a;
+            --gray-50: #f9fafb;
+            --gray-100: #f1f4f8;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --red: #ef4444;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-600);
+        }
+
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-300);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .user-menu:hover {
+            background: var(--gray-100);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        /* Search Bar */
+        .search-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 0.875rem;
+        }
+
+        input, select {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--primary);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Access Status */
+        .access-status {
+            background: rgba(26, 86, 219, 0.1);
+            border-left: 4px solid var(--primary-light);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .status-text {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-info {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .status-info strong {
+            color: var(--primary);
+        }}
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .cv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .cv-card {
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: var(--white);
+        }
+
+        .cv-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .cv-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cv-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .cv-headline {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .cv-meta {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .cv-meta strong {
+            color: var(--primary);
+        }
+
+        .cv-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--red);
+            color: var(--red);
+            display: block;
+        }
+
+        .alert-info {
+            background: rgba(26, 86, 219, 0.1);
+            border: 1px solid var(--primary-light);
+            color: var(--primary-light);
+            display: block;
+        }
+
+        .logout-btn {
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray-600);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--red);
+            color: var(--red);
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(0, 196, 154, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            display: block;
+        }
+
+        .alert-info {
+            background: rgba(26, 86, 219, 0.1);
+            border: 1px solid var(--primary-light);
+            color: var(--primary);
+            display: block;
+        }
+
+        @media (max-width: 800px) {
+            .search-section {
+                grid-template-columns: 1fr;
+            }
+
+            .cv-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo-text">CVhive</div>
+        <div class="nav-right">
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">JS</div>
+                <span class="user-name" id="userName">Jane Smith</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">Log Out</button>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Browse CVs</h1>
+            <p class="page-subtitle">Find and download qualified candidates' CVs</p>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alerts"></div>
+
+        <!-- Access Status Card -->
+        <div class="card">
+            <div id="accessStatus"></div>
+        </div>
+
+        <!-- Search & Filter Card -->
+        <div class="card">
+            <div class="card-title">🔍 Search Candidates</div>
+            
+            <div class="search-section">
+                <div class="form-group">
+                    <label for="searchInput">Search by Name/Headline</label>
+                    <input type="text" id="searchInput" placeholder="e.g. Software Engineer">
+                </div>
+
+                <div class="form-group">
+                    <label for="locationFilter">Filter by Location</label>
+                    <select id="locationFilter">
+                        <option value="">All Locations</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Ajman">Ajman</option>
+                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                        <option value="Fujairah">Fujairah</option>
+                        <option value="Umm Al Quwain">Umm Al Quwain</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="display: none;">
+                    <label>&nbsp;</label>
+                    <input type="hidden" id="pageNumber" value="1">
+                </div>
+
+                <button class="btn btn-primary btn-small" id="searchBtn">Search</button>
+            </div>
+        </div>
+
+        <!-- CVs Grid -->
+        <div class="card">
+            <div class="card-title">💼 Available Candidates</div>
+            <div id="cvGrid" class="cv-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const locationFilter = document.getElementById('locationFilter');
+        const searchBtn = document.getElementById('searchBtn');
+        const cvGrid = document.getElementById('cvGrid');
+        const accessStatusDiv = document.getElementById('accessStatus');
+        const userMenu = document.getElementById('userMenu');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const alertsDiv = document.getElementById('alerts');
+
+        // Authentication check
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = '/login.html';
+                return false;
+            }
+            return token;
+        }
+            return token;
+        }
+
+        // Initialize
+        function init() {
+            const token = checkAuth();
+            if (!token) return;
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.role || user.role !== 'employer') {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (user.name) {
+                userName.textContent = user.name;
+                userAvatar.textContent = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            }
+
+            checkAccess();
+            loadCVs();
+        }
+
+        // Check and display access status
+        async function checkAccess() {
+            const token = localStorage.getItem('authToken');
+            try {
+                const response = await fetch('/v1/payments/status', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.data.active_access) {
+                    const access = data.data.active_access;
+                    const expiresAt = new Date(access.expires_at);
+                    const daysLeft = Math.ceil((expiresAt - new Date()) / (1000 * 60 * 60 * 24));
+
+                    accessStatusDiv.innerHTML = `
+                        <div class="access-status">
+                            <div class="status-text">✅ Active Access</div>
+                            <div class="status-info">
+                                Package: <strong>${formatPackageType(access.package_type)}</strong><br>
+                                CVs Viewed: <strong>${access.cv_views_used}${access.cv_view_limit ? ' / ' + access.cv_view_limit : ' / Unlimited'}</strong><br>
+                                Expires in: <strong>${daysLeft} days</strong>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    accessStatusDiv.innerHTML = `
+                        <div class="access-status" style="background: rgba(239, 68, 68, 0.1); border-left-color: var(--red);">
+                            <div class="status-text" style="color: var(--red);">❌ No Active Access</div>
+                            <div class="status-info" style="color: var(--red);">
+                                You need to purchase a package to view CVs. <a href="#" onclick="purchaseAccess();" style="color: var(--primary-light); font-weight: 600;">Click here to purchase</a>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error('Error checking access:', err);
+            }
+        }
+
+        function formatPackageType(type) {
+            const types = {
+                'monthly_access': '📅 Monthly Unlimited',
+                'one_time_unlimited': '⚡ 7-Day Unlimited',
+                'pay_per_cv': '💳 Pay Per CV'
+            };
+            return types[type] || type;
+        }
+
+        // Load CVs
+        async function loadCVs() {
+            const token = localStorage.getItem('authToken');
+            const search = searchInput.value;
+            const location = locationFilter.value;
+
+            const params = new URLSearchParams();
+            if (search) params.append('search', search);
+            if (location) params.append('location', location);
+            params.append('limit', 12);
+
+            try {
+                const response = await fetch(`/v1/cvs/available?${params}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.status === 403) {
+                    accessStatusDiv.innerHTML = `
+                        <div class="access-status" style="background: rgba(239, 68, 68, 0.1); border-left-color: var(--red);">
+                            <div class="status-text" style="color: var(--red);">❌ Access Required</div>
+                            <div class="status-info" style="color: var(--red);">${data.error}</div>
+                        </div>
+                    `;
+                    cvGrid.innerHTML = '';
+                    return;
+                }
+
+                if (response.ok) {
+                    renderCVs(data.data);
+                }
+            } catch (err) {
+                showAlert('Error loading CVs', 'error');
+            }
+        }
+
+        function renderCVs(cvs) {
+            if (!cvs || cvs.length === 0) {
+                cvGrid.innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <p><strong>No candidates found</strong></p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Try adjusting your search filters</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            cvGrid.innerHTML = cvs.map(cv => `
+                <div class="cv-card">
+                    <div class="cv-avatar">${(cv.first_name || 'C').charAt(0)}${(cv.last_name || 'V').charAt(0)}</div>
+                    <div class="cv-name">${cv.first_name} ${cv.last_name}</div>
+                    <div class="cv-headline">${cv.headline || 'Professional'}</div>
+                    <div class="cv-meta">
+                        ${cv.location ? `📍 <strong>${cv.location}</strong><br>` : ''}
+                        ${cv.years_experience ? `💼 <strong>${cv.years_experience} years</strong><br>` : ''}
+                        ${cv.skills && cv.skills.length ? `🎯 ${cv.skills.slice(0, 2).join(', ')}` : ''}
+                    </div>
+                    <div class="cv-actions">
+                        <button class="btn btn-primary btn-small" onclick="downloadCV('${cv.id}')">Download</button>
+                        <button class="btn btn-secondary btn-small" onclick="showCVDetails('${cv.job_seeker_id}')">View</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Download CV
+        async function downloadCV(cvId) {
+            const token = localStorage.getItem('authToken');
+
+            try {
+                const response = await fetch(`/v1/cvs/${cvId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.status === 403) {
+                    const data = await response.json();
+                    showAlert(data.error || 'CV access denied', 'error');
+                    checkAccess();
+                    return;
+                }
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `cv-${cvId}.pdf`;
+                    a.click();
+                    showAlert('✅ CV downloaded successfully!', 'success');
+                }
+            } catch (err) {
+                showAlert('Error downloading CV', 'error');
+            }
+        }
+
+        function showCVDetails(jobSeekerId) {
+            alert('Candidate details popup would go here (job_seeker_id: ' + jobSeekerId + ')');
+        }
+
+        function purchaseAccess() {
+            // Would redirect to payment page
+            alert('Redirect to payment packages page');
+        }
+
+        // Search handlers
+        searchBtn.addEventListener('click', loadCVs);
+
+        locationFilter.addEventListener('change', loadCVs);
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadCVs();
+            }
+        });
+
+        function showAlert(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `alert alert-${type}`;
+            div.textContent = message;
+            alertsDiv.innerHTML = '';
+            alertsDiv.appendChild(div);
+
+            if (type !== 'info') {
+                setTimeout(() => div.remove(), 5000);
+            }
+        }
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

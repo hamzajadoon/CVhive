@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CVhive</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1628;
+            --primary-light: #1a56db;
+            --secondary: #f5a623;
+            --accent: #00c49a;
+            --gray-100: #f1f4f8;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 0.875rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .checkbox-group a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--accent);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo">
+                <img src="/logo.jpeg" alt="CVhive Logo" class="logo-svg">
+                <div class="logo-text">CVhive</div>
+            </div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Begin your recruitment journey today</p>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="company">Company Name *</label>
+                    <input type="text" id="company" name="company_name" required placeholder="Your company name">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required placeholder="your@company.com">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required placeholder="Min 8 characters">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+971 50 XXX XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="emirate">Emirate</label>
+                        <select id="emirate" name="emirate">
+                            <option value="">Select...</option>
+                            <option value="dubai">Dubai</option>
+                            <option value="abudhabi">Abu Dhabi</option>
+                            <option value="sharjah">Sharjah</option>
+                            <option value="ajman">Ajman</option>
+                            <option value="ummalquwain">Umm Al Quwain</option>
+                            <option value="ras">Ras Al Khaimah</option>
+                            <option value="fujairah">Fujairah</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="license">Trade License (Optional)</label>
+                    <input type="text" id="license" name="trade_license_number" placeholder="Your trade license">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="gdpr" name="gdpr_consent" required>
+                    <label for="gdpr">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> and confirm GDPR compliance</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <span id="buttonText">Create Account</span>
+                    <span class="loading" id="loading">⏳ Creating...</span>
+                </button>
+
+                <div class="error-message" id="formError"></div>
+            </form>
+
+            <div class="footer">
+                Already have an account? <a href="/login">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const loading = document.getElementById('loading');
+        const buttonText = document.getElementById('buttonText');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                company_name: document.getElementById('company').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                phone: document.getElementById('phone').value || null,
+                emirate: document.getElementById('emirate').value || null,
+                trade_license_number: document.getElementById('license').value || null,
+                gdpr_consent: document.getElementById('gdpr').checked
+            };
+
+            // Validate password
+            if (formData.password.length < 8) {
+                document.getElementById('formError').textContent = 'Password must be at least 8 characters';
+                document.getElementById('formError').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('formError').style.display = 'none';
+            loading.classList.add('show');
+            buttonText.style.display = 'none';
+
+            try {
+                const response = await fetch('/v1/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById('formError').textContent = data.error || 'Sign up failed';
+                    document.getElementById('formError').style.display = 'block';
+                } else {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                document.getElementById('formError').textContent = 'Network error. Please try again.';
+                document.getElementById('formError').style.display = 'block';
+            } finally {
+                loading.classList.remove('show');
+                buttonText.style.display = 'inline';
+            }
+        });
+    </script>
+</body>
+</html>

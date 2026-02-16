@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CVhive</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a1628;
+            --primary-light: #1a56db;
+            --secondary: #f5a623;
+            --accent: #00c49a;
+            --danger: #ef4444;
+            --gray-100: #f1f4f8;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
+            padding: 1.5rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 250px;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: var(--gray-100);
+            color: var(--primary-light);
+        }
+
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-section {
+            border-top: 1px solid var(--gray-200);
+            padding-top: 1rem;
+            margin-top: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .user-details h4 {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .user-details p {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 8px;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card h3 {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--gray-100);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-light);
+            background: rgba(26, 86, 219, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area p {
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area .hint {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        #cvFile {
+            display: none;
+        }
+
+        .cv-list {
+            margin-top: 2rem;
+        }
+
+        .cv-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .cv-item-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .cv-item-info p {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .cv-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-danger {
+            background: var(--gray-100);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: rgba(0, 196, 154, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 196, 154, 0.3);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                z-index: 100;
+                width: 250px;
+                transition: left 0.3s;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="#" class="logo">
+                <img src="/logo.jpeg" alt="CVhive Logo" style="width: 40px; height: 40px; margin-right: 0.5rem;">
+                <div class="logo-text">CVhive</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-section="cv"><i class="fas fa-file-pdf"></i> My CVs</a></li>
+                <li><a href="#" class="nav-link" data-section="account"><i class="fas fa-user"></i> Account</a></li>
+            </ul>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar" id="userInitial">U</div>
+                    <div class="user-details">
+                        <h4 id="userName">User Name</h4>
+                        <p id="userEmail">user@company.com</p>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="header">
+                <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                <h1>Dashboard</h1>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats" id="statsSection">
+                <div class="stat-card">
+                    <h3>CVs Uploaded</h3>
+                    <div class="stat-value" id="cvCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Profile Views</h3>
+                    <div class="stat-value" id="viewCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Subscription</h3>
+                    <div class="stat-value" id="subscription">Free</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content">
+                <!-- CV Upload Section -->
+                <div class="card" id="cvSection">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Upload CV</h2>
+                    <div class="alert" id="alert"></div>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-file-pdf"></i>
+                        <p><strong>Click to upload or drag and drop</strong></p>
+                        <p class="hint">PDF, DOC, DOCX up to 10MB</p>
+                    </div>
+                    <input type="file" id="cvFile" accept=".pdf,.doc,.docx" />
+
+                    <div class="cv-list" id="cvList"></div>
+                </div>
+
+                <!-- Quick Stats Sidebar -->
+                <div>
+                    <div class="card">
+                        <h2><i class="fas fa-info-circle"></i> Account</h2>
+                        <div style="margin-top: 1rem;">
+                            <p><strong>Account Status:</strong></p>
+                            <p id="accountStatus" style="color: var(--accent); font-weight: 600; margin-bottom: 1.5rem;">Active</p>
+                            
+                            <p><strong>Last CV Upload:</strong></p>
+                            <p id="lastUpload" style="color: var(--gray-600); margin-bottom: 1.5rem;">No CVs yet</p>
+                            
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                                <i class="fas fa-cog"></i> Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            if (!token || !user) {
+                window.location.href = '/login';
+                return null;
+            }
+            return JSON.parse(user);
+        }
+
+        const currentUser = checkAuth();
+
+        // Display user info
+        if (currentUser) {
+            document.getElementById('userName').textContent = currentUser.company_name || 'User';
+            document.getElementById('userEmail').textContent = currentUser.email;
+            const initials = currentUser.company_name.substring(0, 2).toUpperCase();
+            document.getElementById('userInitial').textContent = initials;
+        }
+
+        // Upload Handler
+        const uploadArea = document.getElementById('uploadArea');
+        const cvFile = document.getElementById('cvFile');
+        const alert = document.getElementById('alert');
+
+        uploadArea.addEventListener('click', () => cvFile.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary-light)';
+            uploadArea.style.background = 'rgba(26, 86, 219, 0.05)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--gray-300)';
+            uploadArea.style.background = 'var(--gray-100)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--gray-300)';
+            uploadArea.style.background = 'var(--gray-100)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        cvFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        async function handleFileUpload(file) {
+            if (!file.type.includes('pdf') && !file.type.includes('word')) {
+                showAlert('Only PDF or Word documents are allowed', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showAlert('File size must be less than 10MB', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('cv', file);
+
+            try {
+                const response = await fetch('/v1/cv/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showAlert('CV uploaded successfully!', 'success');
+                    loadCVs();
+                } else {
+                    showAlert(data.error || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Upload error: ' + error.message, 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            alert.textContent = message;
+            alert.className = 'alert ' + type;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 5000);
+        }
+
+        async function loadCVs() {
+            try {
+                const response = await fetch('/v1/cv/list', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayCVs(data.data.cvs);
+                    document.getElementById('cvCount').textContent = data.data.cvs.length;
+                }
+            } catch (error) {
+                console.error('Error loading CVs:', error);
+            }
+        }
+
+        function displayCVs(cvs) {
+            const cvList = document.getElementById('cvList');
+            if (cvs.length === 0) {
+                cvList.innerHTML = '';
+                return;
+            }
+
+            cvList.innerHTML = cvs.map(cv => `
+                <div class="cv-item">
+                    <div class="cv-item-info">
+                        <h4><i class="fas fa-file-pdf"></i> ${cv.original_filename}</h4>
+                        <p>Uploaded on ${new Date(cv.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="cv-item-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="downloadCV('${cv.id}')"><i class="fas fa-download"></i> Download</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteCV('${cv.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteCV(id) {
+            if (!confirm('Are you sure?')) return;
+            try {
+                const response = await fetch(`/v1/cv/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                });
+                if (response.ok) {
+                    showAlert('CV deleted', 'success');
+                    loadCVs();
+                }
+            } catch (error) {
+                showAlert('Delete failed', 'error');
+            }
+        }
+
+        function downloadCV(id) {
+            window.location.href = `/v1/cv/${id}/download?token=${localStorage.getItem('authToken')}`;
+        }
+
+        // Logout Handler
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        });
+
+        // Mobile sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('.sidebar').classList.remove('active');
+            });
+        });
+
+        // Load CVs on startup
+        loadCVs();
+    </script>
+</body>
+</html>

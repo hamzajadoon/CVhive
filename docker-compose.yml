@@ -1,0 +1,145 @@
+version: '3.9'
+
+# ============================================================
+# TalentBridge — Full Local Stack
+# Services: API, PostgreSQL, Redis, Elasticsearch, Kibana
+#
+# Start:   docker-compose up -d
+# Logs:    docker-compose logs -f api
+# Stop:    docker-compose down
+# Reset:   docker-compose down -v  (also wipes database volumes)
+# ============================================================
+
+services:
+
+  # ── API Server ──────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: CVhive-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV:             development
+      PORT:                 3001
+      DATABASE_URL:         postgresql://postgres:postgres@postgres:5432/cvhive
+      REDIS_HOST:           redis
+      REDIS_PORT:           6379
+      JWT_SECRET:           dev-jwt-secret-change-in-production-min-32-chars
+      JWT_REFRESH_SECRET:   dev-refresh-secret-change-in-production
+      FRONTEND_URL:         http://localhost:3000
+      # Add real keys in .env for AWS, Stripe, SendGrid, Twilio
+      AWS_ACCESS_KEY_ID:    ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION:           me-south-1
+      AWS_S3_BUCKET:        cvhive-cvs-dev
+    volumes:
+      - ./server.js:/app/server.js:ro
+      - ./database:/app/database:ro
+      - ./uploads:/app/uploads          # local CV file storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cvhive-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 15s
+      timeout:  5s
+      retries:  3
+
+  # ── PostgreSQL ──────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: cvhive-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       cvhive
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # These SQL files run automatically on first boot:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    networks:
+      - cvhive-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cvhive"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+
+  # ── Redis (caching) ─────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: cvhive-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cvhive-net
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout:  3s
+      retries:  3
+
+  # ── Elasticsearch (full-text search) ────────────────────
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: cvhive-elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type:         single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS:           "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - cvhive-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1"]
+      interval: 20s
+      timeout:  10s
+      retries:  5
+
+  # ── Kibana (Elasticsearch UI — optional) ────────────────
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: cvhive-kibana
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - cvhive-net
+    profiles:
+      - debug   # only starts with: docker-compose --profile debug up
+
+# ============================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  es_data:
+    driver: local
+
+networks:
+  cvhive-net:
+    driver: bridge

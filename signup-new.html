@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CVhive</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1628;
+            --primary-light: #1a56db;
+            --secondary: #f5a623;
+            --accent: #00c49a;
+            --gray-100: #f1f4f8;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --red: #ef4444;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-card {
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .role-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.15);
+        }
+
+        .role-card.selected {
+            background: linear-gradient(135deg, rgba(26, 86, 219, 0.1) 0%, rgba(26, 86, 219, 0.05) 100%);
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
+        }
+
+        .role-card input[type="radio"] {
+            display: none;
+        }
+
+        .role-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .role-card-desc {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 0.875rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .checkbox-group a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: var(--red);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--red);
+        }
+
+        .success-message {
+            color: var(--accent);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .loading.show {
+            display: inline;
+        }
+
+        .form-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo">
+                <div class="logo-text">CVhive</div>
+            </div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join our recruitment platform - Choose your role to get started</p>
+
+            <form id="signupForm">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 1rem; font-size: 0.95rem;">Select your role *</label>
+                    <div class="role-selection">
+                        <label class="role-card" id="jobSeekerCard">
+                            <input type="radio" name="role" value="job_seeker" required>
+                            <div class="role-card-icon">👤</div>
+                            <div class="role-card-title">Job Seeker</div>
+                            <div class="role-card-desc">Upload your CV and find opportunities</div>
+                        </label>
+                        <label class="role-card" id="employerCard">
+                            <input type="radio" name="role" value="employer" required>
+                            <div class="role-card-icon">🏢</div>
+                            <div class="role-card-title">Employer</div>
+                            <div class="role-card-desc">Find and hire qualified candidates</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Common Fields -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required placeholder="Min 8 characters">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone (Optional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+971 50 XXX XXXX">
+                </div>
+
+                <!-- Employer-specific Fields -->
+                <div id="employerFields" class="form-section">
+                    <div class="form-title">Company Information</div>
+                    <div class="form-group">
+                        <label for="companyName">Company Name *</label>
+                        <input type="text" id="companyName" name="companyName" placeholder="Your company name">
+                    </div>
+                </div>
+
+                <!-- Job Seeker Info (placeholder) -->
+                <div id="jobSeekerFields" class="form-section active">
+                </div>
+
+                <!-- GDPR Consent -->
+                <div class="checkbox-group" style="margin-top: 2rem;">
+                    <input type="checkbox" id="gdpr" name="gdpr_consent" required>
+                    <label for="gdpr">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> and confirm I understand how my data will be used</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span id="buttonText">Create Account</span>
+                    <span class="loading" id="loading">⏳ Creating...</span>
+                </button>
+
+                <div class="error-message" id="formError"></div>
+            </form>
+
+            <div class="footer">
+                Already have an account? <a href="/login">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const roleCards = document.querySelectorAll('.role-card');
+        const employerFields = document.getElementById('employerFields');
+        const jobSeekerFields = document.getElementById('jobSeekerFields');
+        const companyNameInput = document.getElementById('companyName');
+        const loading = document.getElementById('loading');
+        const buttonText = document.getElementById('buttonText');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Role selection handlers
+        roleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                roleCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                card.querySelector('input[type="radio"]').checked = true;
+                
+                const selectedRole = card.querySelector('input[type="radio"]').value;
+                
+                if (selectedRole === 'employer') {
+                    employerFields.classList.add('active');
+                    jobSeekerFields.classList.remove('active');
+                    companyNameInput.required = true;
+                } else {
+                    employerFields.classList.remove('active');
+                    jobSeekerFields.classList.add('active');
+                    companyNameInput.required = false;
+                }
+            });
+        });
+
+        // Handle radio button changes
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.getElementById(e.target.value === 'employer' ? 'employerCard' : 'jobSeekerCard').click();
+            });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const role = document.querySelector('input[name="role"]:checked');
+            if (!role) {
+                showError('Please select your role');
+                return;
+            }
+
+            const formData = {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value || null,
+                role: role.value,
+                gdprConsent: document.getElementById('gdpr').checked
+            };
+
+            // Add employer-specific field
+            if (formData.role === 'employer') {
+                formData.companyName = companyNameInput.value;
+                if (!formData.companyName) {
+                    showError('Company name is required for employers');
+                    return;
+                }
+            }
+
+            // Validate password
+            if (formData.password.length < 8) {
+                showError('Password must be at least 8 characters');
+                return;
+            }
+
+            if (!formData.gdprConsent) {
+                showError('You must agree to the terms and privacy policy');
+                return;
+            }
+
+            document.getElementById('formError').style.display = 'none';
+            loading.classList.add('show');
+            buttonText.style.display = 'none';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/v1/users/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showError(data.error || 'Sign up failed');
+                } else {
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data));
+                    
+                    // Redirect based on role
+                    if (data.data.role === 'job_seeker') {
+                        window.location.href = '/job-seeker-dashboard';
+                    } else {
+                        window.location.href = '/employer-dashboard';
+                    }
+                }
+            } catch (error) {
+                showError('Network error. Please try again.');
+            } finally {
+                loading.classList.remove('show');
+                buttonText.style.display = 'inline';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showError(message) {
+            document.getElementById('formError').textContent = message;
+            document.getElementById('formError').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
